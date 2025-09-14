@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abrazo al Alma</title>
+    <!-- Favicon de la Cruz para la pestaña del navegador -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text x='0' y='14' font-size='16'>✝</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .chat-container {
+            max-height: 80vh;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #a0a0a0 #f1f1f1;
+        }
+        .chat-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        .chat-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .chat-container::-webkit-scrollbar-thumb {
+            background-color: #a0a0a0;
+            border-radius: 10px;
+            border: 2px solid #f1f1f1;
+        }
+        .user-message {
+            background-color: #e0f2fe;
+            color: #1e40af;
+            border-radius: 1.25rem 1.25rem 0.25rem 1.25rem;
+        }
+        .ai-message {
+            background-color: #ffffff;
+            color: #1f2937;
+            border-radius: 1.25rem 1.25rem 1.25rem 0.25rem;
+        }
+        .loading-animation {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl flex flex-col h-[90vh]">
+        <!-- Encabezado con los logos de la cruz, el sol y la palabra FE -->
+        <header class="bg-yellow-400 text-white p-6 rounded-t-2xl">
+            <div class="flex items-center justify-center space-x-4">
+                <!-- SVG de la Cruz -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                <!-- SVG del Sol -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zm-7.5 5.5a.75.75 0 00-.53 1.287l1.595 1.596a.75.75 0 101.06-.011l-1.596-1.595a.75.75 0 00-.53-.257zm11.391-.011a.75.75 0 00-.01.99l1.595 1.596a.75.75 0 001.071-1.05l-1.596-1.595a.75.75 0 00-1.05-.011zM12 15a3 3 0 100-6 3 3 0 000 6zM2.25 12a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H3a.75.75 0 01-.75-.75zM17.25 12a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H18a.75.75 0 01-.75-.75zM4.996 17.25a.75.75 0 00-1.06 0l-1.596 1.595a.75.75 0 001.06 1.06l1.596-1.595a.75.75 0 000-1.06zm11.391 3.25a.75.75 0 00-1.06 0l-1.595-1.595a.75.75 0 000 1.06l1.595 1.595a.75.75 0 001.06 0zM12 18.75a.75.75 0 01-.75.75v2.25a.75.75 0 011.5 0V19.5a.75.75 0 01-.75-.75z" />
+                </svg>
+                <h1 class="text-3xl font-bold text-center">Abrazo al Alma</h1>
+                <!-- SVG de la palabra FE -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" viewBox="0 0 100 100">
+                    <text x="50" y="70" font-family="Verdana" font-size="50" font-weight="bold" fill="white" text-anchor="middle">FE</text>
+                </svg>
+            </div>
+            <p class="text-center text-sm mt-2 opacity-90">No estás solo. Tu amigo de apoyo espiritual. Recuerda que esta es una herramienta de IA y no reemplaza el consejo de un líder religioso o un profesional.</p>
+        </header>
+
+        <!-- Contenedor del chat -->
+        <main id="chat-container" class="flex-grow p-6 space-y-4 chat-container">
+            <div class="flex justify-start">
+                <div class="ai-message max-w-[80%] p-4 shadow-sm">
+                    Hola. Estoy aquí para escucharte y ofrecerte consuelo. ¿Cómo puedo ayudarte hoy?
+                </div>
+            </div>
+        </main>
+
+        <!-- Pie de página con el área de entrada y copyright -->
+        <footer class="p-4 border-t border-gray-200 bg-gray-50 rounded-b-2xl flex flex-col items-center space-y-2">
+            <div class="flex items-center space-x-2 w-full">
+                <input type="text" id="chat-input" placeholder="Escribe tu mensaje..." class="flex-grow p-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" autocomplete="off">
+                <button id="send-button" class="bg-blue-600 text-white rounded-full p-3 w-12 h-12 flex items-center justify-center hover:bg-blue-700 transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                        <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
+                    </svg>
+                </button>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">© 2025 FarbyFab. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+
+    <script type="text/javascript">
+        // Elementos del DOM
+        const chatInput = document.getElementById('chat-input');
+        const sendButton = document.getElementById('send-button');
+        const chatContainer = document.getElementById('chat-container');
+
+        // Configuración de la API de Gemini
+        const API_KEY = "AIzaSyDR7yRtGseUA88pP7O58nvLdlv5OSw95Aw"; //
+        const API_URL = https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY};
+
+        // Historial del chat para mantener el contexto
+        let chatHistory = [];
+
+        // Mensaje del sistema para guiar la personalidad de la IA
+        const systemPrompt = Actúa como un amigo de apoyo espiritual, con un enfoque en ofrecer consuelo, esperanza y una perspectiva positiva a quienes buscan apoyo en momentos de desesperación o soledad. Tus respuestas deben ser concisas y breves, siempre incluyendo al menos una cita bíblica relevante para el tema del usuario. Tu objetivo es ser una fuente de apoyo basada en la fe. Evita dar consejos médicos, psicológicos o financieros. Responde siempre en español.;
+
+        // Función para enviar el mensaje
+        async function sendMessage() {
+            const userMessage = chatInput.value.trim();
+            if (!userMessage) return;
+
+            // Mostrar el mensaje del usuario en el chat
+            appendMessage(userMessage, 'user');
+            chatInput.value = '';
+            
+            // Añadir el mensaje del usuario al historial
+            chatHistory.push({ role: 'user', parts: [{ text: userMessage }] });
+
+            // Mostrar animación de carga
+            const loadingElement = document.createElement('div');
+            loadingElement.className = 'flex justify-start items-center space-x-2 p-4';
+            loadingElement.innerHTML = `
+                <div class="ai-message max-w-[80%] flex items-center justify-center p-4 shadow-sm">
+                    <div class="loading-animation"></div>
+                </div>
+            `;
+            chatContainer.appendChild(loadingElement);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            try {
+                const payload = {
+                    contents: chatHistory,
+                    systemInstruction: {
+                        parts: [{ text: systemPrompt }]
+                    },
+                };
+
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const result = await response.json();
+                
+                // Eliminar la animación de carga
+                chatContainer.removeChild(loadingElement);
+
+                if (result.candidates && result.candidates.length > 0) {
+                    const aiResponse = result.candidates[0].content.parts[0].text;
+                    // Mostrar la respuesta de la IA
+                    appendMessage(aiResponse, 'ai');
+                    // Añadir la respuesta de la IA al historial
+                    chatHistory.push({ role: 'model', parts: [{ text: aiResponse }] });
+                } else {
+                    appendMessage("Lo siento, no pude generar una respuesta. Por favor, intenta de nuevo.", 'ai');
+                }
+
+            } catch (error) {
+                console.error("Error al llamar a la API de Gemini:", error);
+                // Eliminar la animación de carga y mostrar un mensaje de error
+                chatContainer.removeChild(loadingElement);
+                appendMessage("Ocurrió un error. Por favor, revisa la consola para más detalles.", 'ai');
+            }
+        }
+
+        // Función para agregar un mensaje al DOM
+        function appendMessage(text, sender) {
+            const messageElement = document.createElement('div');
+            const messageWrapper = document.createElement('div');
+            messageWrapper.className = max-w-[80%] p-4 shadow-sm;
+
+            if (sender === 'user') {
+                messageElement.className = 'flex justify-end';
+                messageWrapper.className += ' user-message';
+            } else {
+                messageElement.className = 'flex justify-start';
+                messageWrapper.className += ' ai-message';
+            }
+
+            messageWrapper.innerText = text;
+            messageElement.appendChild(messageWrapper);
+            chatContainer.appendChild(messageElement);
+
+            // Desplazar hacia abajo para ver el último mensaje
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Manejadores de eventos
+        sendButton.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
