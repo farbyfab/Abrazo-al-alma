@@ -124,6 +124,12 @@
             const userMessage = chatInput.value.trim();
             if (!userMessage) return;
 
+            // Muestra un mensaje de error si no se ha configurado la clave de API
+            if (API_KEY === "") {
+                appendMessage("Error: La clave de API no está configurada. Por favor, revisa el código.", 'ai');
+                return;
+            }
+
             // Mostrar el mensaje del usuario en el chat
             appendMessage(userMessage, 'user');
             chatInput.value = '';
